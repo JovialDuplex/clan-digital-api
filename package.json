@@ -1,0 +1,36 @@
+{
+  "name": "clan-digital-api",
+  "version": "1.0.0",
+  "description": "cette api gere la partie backend de l'application web clan digital et toutes les operations en arriere plans",
+  "homepage": "https://github.com/JovialDuplex/clan-digital-api#readme",
+  "bugs": {
+    "url": "https://github.com/JovialDuplex/clan-digital-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JovialDuplex/clan-digital-api.git"
+  },
+  "license": "ISC",
+  "author": "JovialDuplex",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-ws": "^5.0.2",
+    "express-wss": "^1.1.0",
+    "http-proxy-middleware": "^4.0.0",
+    "joi": "^18.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.3",
+    "sequelize": "^6.37.8",
+    "vhost": "^3.0.2"
+  }
+}
