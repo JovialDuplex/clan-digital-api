@@ -1,64 +1,50 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('users', {
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
+const mongoose = require("mongoose");
+const mongooseType = mongoose.SchemaTypes;
+
+const userSchema = new mongoose.Schema({
+    user_name: {
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    full_name: {
-      type: DataTypes.STRING(150),
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-      unique: "email"
-    },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    phone: {
-      type: DataTypes.STRING(20),
-      allowNull: true
-    },
-    role: {
-      type: DataTypes.ENUM('admin','member','client'),
-      allowNull: true,
-      defaultValue: "client"
-    },
-    profile_picture: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    is_active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: 1
-    }
-  }, {
-    sequelize,
-    tableName: 'users',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
+    user_email: {
+        type: mongooseType.String,
+        required: true,
         unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "email",
+        lowercase: true,
+        trim: true,
+    },
+    user_password: {
+        type: mongooseType.String,
+        required: true,
+        minlength: 6,
+    },
+    user_phone: {
+        type: mongooseType.String,
+        required: true,
         unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "email" },
-        ]
-      },
-    ]
-  });
-};
+        trim: true,
+        default: null,
+        maxlength: 20,
+    },
+    user_role: {
+        type: mongooseType.String,
+        enum: ["user", "admin", "client"],
+        default: "client",
+    },
+    user_profile_picture: {
+        type: mongooseType.String,
+        default: null,
+    },
+
+    user_is_available: {
+        type: mongooseType.Boolean,
+        default: true,
+    },
+
+}, {
+    timestamps: { createdAt: "created_at", updatedAt: false}
+});
+
+module.exports = mongoose.model("User", userSchema);

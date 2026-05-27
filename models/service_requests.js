@@ -1,75 +1,50 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('service_requests', {
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
+const mongoose = require("mongoose");
+const mongooseType = mongoose.SchemaTypes;
+
+const serviceRequestSchema = new mongoose.Schema({
     client_name: {
-      type: DataTypes.STRING(150),
-      allowNull: false
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    email: {
-      type: DataTypes.STRING(150),
-      allowNull: false
+    client_email: {
+        type: mongooseType.String,
+        required: true,
+        lowercase: true,
+        trim: true,
     },
-    phone: {
-      type: DataTypes.STRING(20),
-      allowNull: true
+    client_phone: {
+        type: mongooseType.String,
+        required: true,
+        trim: true,
+        default: null,
+        maxlength: 20,
     },
     subject: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+        type: mongooseType.String,
+        required: true,
+        default: null,
+        maxlength: 200,
     },
     message: {
-      type: DataTypes.TEXT,
-      allowNull: false
+        type: mongooseType.String,
+        required: true,
+        default: null,
+        maxlength: 500,
     },
-    service_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'services',
-        key: 'id'
-      }
-    },
-    client_type: {
-      type: DataTypes.ENUM('company','individual'),
-      allowNull: true,
-      defaultValue: "individual"
+    service_id : {
+        type: mongooseType.ObjectId,
+        ref: "Service",
+        required: true,
     },
     request_status: {
-      type: DataTypes.ENUM('pending','in_progress','completed','cancelled'),
-      allowNull: true,
-      defaultValue: "pending"
+        type: mongooseType.String,
+        enum: ["pending", "in_progress", "completed", "rejected"],
+        default: "pending",
     },
-    requested_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
-    }
-  }, {
-    sequelize,
-    tableName: 'service_requests',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "service_id",
-        using: "BTREE",
-        fields: [
-          { name: "service_id" },
-        ]
-      },
-    ]
-  });
-};
+}, {
+    timestamps: { createdAt: "created_at", updatedAt: false}    
+});
+
+module.exports = mongoose.model("ServiceRequest", serviceRequestSchema);

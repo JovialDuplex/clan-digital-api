@@ -1,28 +1,26 @@
-const {Sequelize} = require("sequelize");
-
-// Configuration d'un sequelize pour connexion a la base de donnee 
-
-const connectDB = async function() {
-    const sequelize = new Sequelize(
-        process.env.DATABASE_NAME,
-        process.env.DATABASE_USER,
-        process.env.DATABASE_PASSWORD,
-        {
-            host: process.env.DATABASE_HOST,
-            dialect: "mysql"
-        }
-    );
-
-    try{
-        await sequelize.authenticate();
-        console.log("Connexion a la base de donnee mysql reussit");
+const { config } = require("dotenv");
+const multer = require("multer");
+const mongoose = require("mongoose");
+// configuration de la base de donnee
+const connectDB = async function(){
+    const uri = process.env.NODE_ENV === "production" ? process.env.PROD_MONGO_URI : process.env.LOCAL_MONGO_URI;
+    try {
+        await mongoose.connect(uri);
+        console.log("connexion a la base de donnee reussie");
     } catch (error) {
-        console.log("Une erreur est survenue lors de la connexion a la base de donnee");
+        console.log("erreur de connexion a la base de donnee ", error);
         throw error;
     }
+}
 
-};
+// configuration de l'application
+const configApp = function(app, express){
+    app.use(express.json());
+    app.use(express.urlencoded({extended: true}));
+
+}
 
 module.exports = {
+    configApp,
     connectDB
 };

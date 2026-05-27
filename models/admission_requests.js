@@ -1,69 +1,67 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('admission_requests', {
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
+const mongoose = require("mongoose");
+const mongooseType = mongoose.SchemaTypes;
+
+const admissionRequestSchema = new mongoose.Schema({
+    user_name : {
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    full_name: {
-      type: DataTypes.STRING(150),
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING(150),
-      allowNull: false
-    },
-    portfolio_url: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    profession: {
-      type: DataTypes.STRING(150),
-      allowNull: true
-    },
-    motivation: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    cv_file: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    status: {
-      type: DataTypes.ENUM('approved','rejected','pending'),
-      allowNull: true,
-      defaultValue: "pending"
-    },
-    reviewed_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
-    }
-  }, {
-    sequelize,
-    tableName: 'admission_requests',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
+    user_email : {
+        type: mongooseType.String,
+        required: true,
         unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "reviewed_by",
-        using: "BTREE",
-        fields: [
-          { name: "reviewed_by" },
-        ]
-      },
-    ]
-  });
-};
+        lowercase: true,
+        trim: true,
+    },
+    user_portfolio_link : {
+        type: mongooseType.String,
+        trim: true,
+    },
+
+    user_phone : {
+        type: mongooseType.String,
+        required: true,
+        unique: true,
+        trim: true,
+        default: null,
+        maxlength: 20,
+    },
+    
+    user_profession : {
+        type: mongooseType.String,
+        required: true,
+        trim: true,
+    },
+
+    user_cvfile: {
+        type: mongooseType.String,
+        required: true,
+        default: null,
+    },
+
+    user_motivation : {
+        type: mongooseType.String,
+        required: true,
+        trim: true,
+    },
+    
+    request_status : {
+        type: mongooseType.String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending",
+    },
+
+    reviewed_by : {
+        // savoir quel utilisateur a traiter la demande d'admission
+        type: mongooseType.ObjectId,
+        ref: "User",
+        default: null,
+    },
+
+}, {
+    timestamps: { createdAt: "created_at", updatedAt: false}        
+});
+
+module.exports = mongoose.model("AdmissionRequest", admissionRequestSchema);

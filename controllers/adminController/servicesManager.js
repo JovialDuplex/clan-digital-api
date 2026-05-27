@@ -1,17 +1,18 @@
+const {LoremIpsum} = require("lorem-ipsum");
 
 // ------Ajout
-const addSerives = function(request, response) {
-    return response.send("Ajout d'un service ....");
+const addSerives = async function(request, response) {
+    return response.send("ajout de l'article ...");
 };
 
 // -----Mise a jour
-const updateServices = function(request, response){
-    return response.send("Mise a jour d'un service ....");
+const updateServices = async function(request, response){
+    return response.send("mise a jour de l'article...");
 };
 
 // suppression
-const deleteServices = function(request, response){
-    return response.send("suppression d'un service ");
+const deleteServices = async function(request, response){
+    return response.send("suppresion de l'article ...");
 };
 
 module.exports = {

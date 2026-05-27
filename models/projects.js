@@ -1,100 +1,66 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('projects', {
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
+const mongoose = require("mongoose");
+const mongooseType = mongoose.SchemaTypes;
+
+const projectSchema = new mongoose.Schema({
+    project_name: {
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    title: {
-      type: DataTypes.STRING(200),
-      allowNull: false
+    project_description: {
+        type: mongooseType.String,
+        required: true,
+        default: null,
+        maxlength: 500,
     },
-    slug: {
-      type: DataTypes.STRING(200),
-      allowNull: false,
-      unique: "slug"
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
+    project_image: {
+        type: mongooseType.String,
+        default: null,
     },
     project_url: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+        type: mongooseType.String,
+        default: null,
     },
+    
     github_url: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+        type: mongooseType.String,
+        default: null,
     },
+
+    // pour les clients non enregistres qui avait commande un projet
     client_name: {
-      type: DataTypes.STRING(150),
-      allowNull: true
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
+
+    // pour les clients enregistrers qui ont commande un projet
+    client_id: {
+        type: mongooseType.ObjectId,
+        ref: "User",
+        default: null,
     },
-    service_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'services',
-        key: 'id'
-      }
+
+    service_id : {
+        type: mongooseType.ObjectId,
+        ref: "Service",
+        required: true,
     },
+
     start_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: true
+        type: mongooseType.Date,
+        default: Date.now,
     },
+
     end_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: true
+        type: mongooseType.Date,
+        default: null,
     },
-    duration_days: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    }
-  }, {
-    sequelize,
-    tableName: 'projects',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "slug",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "slug" },
-        ]
-      },
-      {
-        name: "service_id",
-        using: "BTREE",
-        fields: [
-          { name: "service_id" },
-        ]
-      },
-      {
-        name: "user_id",
-        using: "BTREE",
-        fields: [
-          { name: "user_id" },
-        ]
-      },
-    ]
-  });
-};
+
+}, {
+    timestamps: { createdAt: "created_at", updatedAt: false}
+});
+
+module.exports = mongoose.model("Project", projectSchema);

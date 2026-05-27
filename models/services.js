@@ -1,55 +1,33 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('services', {
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
+const mongoose = require("mongoose");
+const mongooseType = mongoose.SchemaTypes;
+
+const serviceSchema = new mongoose.Schema({
     service_name: {
-      type: DataTypes.STRING(150),
-      allowNull: false
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    slug: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-      unique: "slug"
+    service_description: {
+        type: mongooseType.String,
+        required: true,
+        trim: true,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false
+    service_price: {
+        type: mongooseType.Number,
+        required: true,
     },
-    cover_image: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+    service_image: {
+        type: mongooseType.String,
+        default: null,
     },
-    is_active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: 1
-    }
-  }, {
-    sequelize,
-    tableName: 'services',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "slug",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "slug" },
-        ]
-      },
-    ]
-  });
-};
+    service_is_available: {
+        type: mongooseType.Boolean,
+        default: true,
+    },
+
+}, {
+    timestamps: { createdAt: "created_at", updatedAt: false}
+});
+
+module.exports = mongoose.model("Service", serviceSchema);  

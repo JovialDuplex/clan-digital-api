@@ -1,51 +1,45 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('testimonials', {
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
+const mongoose = require("mongoose");
+const mongooseType = mongoose.SchemaTypes;
+
+const testimonialSchema = new mongoose.Schema({
+    // pour les clients non enregistres qui veulent laisser un temoignage
     client_name: {
-      type: DataTypes.STRING(150),
-      allowNull: false
+        type: mongooseType.String,
+        required: true,
+        maxlength: 150,
+        trim: true,
     },
-    message: {
-      type: DataTypes.TEXT,
-      allowNull: false
+    message : {
+        type: mongooseType.String,
+        required: true,
+        default: null,
+        maxlength: 500,
     },
     rating: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: 5
+        type: mongooseType.Number,
+        required: true,
+        default: 5,
+        min: 1,
+        max: 5,
     },
     client_picture: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+        type: mongooseType.String,
+        default: null,
     },
-    company: {
-      type: DataTypes.STRING(150),
-      allowNull: true
+    // pour les clients enregistrers qui veulent laisser un temoignage
+    client_id: {
+        type: mongooseType.ObjectId,
+        ref: "User",
+        default: null,
     },
-    sent_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
-    }
-  }, {
-    sequelize,
-    tableName: 'testimonials',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-    ]
-  });
-};
+    
+    company_name: {
+        type: mongooseType.String,
+        default: null,
+        maxlength: 150,
+        trim: true,
+    },
+
+}, {
+    timestamps: { createdAt: "created_at", updatedAt: false}    
+});
