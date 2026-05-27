@@ -1,11 +1,11 @@
 const router = require("express").Router();
 const serviceManager = require("../controllers/adminController/servicesManager");
 const projectsManager = require("../controllers/adminController/projectsManager");
-const validationServices = require("../middlewares/validation/servicesValidation")
+const serviceValidation = require("../middlewares/validation/servicesValidation")
 
 // --------------- Gestion des Services ------------------
-router.post("/add-services", validationServices.addServiceValidation, serviceManager.addSerives);
-router.put("/update-services", serviceManager.updateServices);
+router.post("/add-services", serviceValidation.addServiceValidation, serviceManager.addSerives);
+router.put("/update-services", serviceValidation.updateServiceValidation, serviceManager.updateServices);
 router.delete("/delete-services", serviceManager.deleteServices);
 
 // --------------- Gestion des Projets -------------------

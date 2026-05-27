@@ -13,10 +13,6 @@ const serviceSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    service_price: {
-        type: mongooseType.Number,
-        required: true,
-    },
     service_image: {
         type: mongooseType.String,
         default: null,
