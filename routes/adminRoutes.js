@@ -1,19 +1,16 @@
 const router = require("express").Router();
-const {
-        addSerives, addProjects, 
-        deleteProjects, deleteServices,
-        updateProjects, updateServices
-    } = require("../controllers/adminControllers");
-
+const serviceManager = require("../controllers/adminController/servicesManager");
+const projectsManager = require("../controllers/adminController/projectsManager");
 
 // --------------- Gestion des Services ------------------
-router.post("/add-services", addSerives);
-router.put("/update-services", updateServices);
-router.delete("/delete-services", deleteServices);
+router.post("/add-services", serviceManager.addSerives);
+router.put("/update-services", serviceManager.updateServices);
+router.delete("/delete-services", serviceManager.deleteServices);
 
 // --------------- Gestion des Projets -------------------
-router.post("/add-projects", addProjects);
-router.put("/update-projects", updateProjects);
-router.delete("/delete-projects", deleteProjects);
+
+router.post("/add-projects", projectsManager.addProjects);
+router.put("/update-projects", projectsManager.updateProjects);
+router.delete("/delete-projects", projectsManager.deleteProjects);
 
 module.exports = router;

@@ -4,11 +4,11 @@ const {Sequelize} = require("sequelize");
 
 const connectDB = async function() {
     const sequelize = new Sequelize(
-        "clan_digital",
-        "duplex",
-        "123456",
+        process.env.DATABASE_NAME,
+        process.env.DATABASE_USER,
+        process.env.DATABASE_PASSWORD,
         {
-            host: "localhost",
+            host: process.env.DATABASE_HOST,
             dialect: "mysql"
         }
     );
