@@ -1,5 +1,6 @@
 const joi = require("joi");
 const serviceModel = require("../../models/services");
+const fs = require("fs");
 
 // Validation pour l'ajout d'un service
 const addServiceValidation = function(request, response, next) {
@@ -13,23 +14,45 @@ const addServiceValidation = function(request, response, next) {
             "string.empty": "La description ne peut pas être vide",
             "any.required": "La description est requise"
         }),
-        service_image: joi.string().required().messages({
-            "string.empty": "L'image du service ne peut pas être vide",
-            "any.required": "L'image du service est requise"
-        }),
+        service_image: joi.object({
+                mimetype : joi.string().required().valid("image/png", "image/jpg", "image/jpeg", "image/bmp").messages({
+                    "any.allowOnly" : "Uniquement les images jpg, png, jpeg et bmp sont acceptees",
+                }),
+               size : joi.number().max(5*1024*1024).messages({
+                    "number.max" : "La taille du fichier doit etre en dessous de 5Mo",
+               }) 
+        }).required().messages({
+            "object.base" : "l'image du service est requis ",
+            "any.required" : "L'image du service est requis "
+        })
     
     });
-    const {error} = schema.validate(request.body, {abortEarly: false});
+
+    const {error} = schema.validate({...request.body, service_image: request.file ? {
+        mimetype : request.file.mimetype,
+        size: request.file.size,
+
+    } : null}, {abortEarly: false});
+
     if(error) {
-        
+
         const details = error.details.map(detail=>(
             {
                 message: detail.message,
                 path: detail.path.join(".")
             }
         ));
-
+        
         console.log("Erreur lors de la validation pour l'ajout d'un service : ", details);
+        
+        // supprimer le fichier s'il y'a une erreur de validation
+        if(request.file) {
+            fs.unlink(request.file.path, (error)=>{
+                if(error) throw "Une erreur c'est produite lors de la suppression du fichier " + error;
+                console.log("le fichier uploader a ete supprime avec success ! ");
+            })
+        }
+
 
         return response.status(400).json(details);
     }
@@ -38,6 +61,7 @@ const addServiceValidation = function(request, response, next) {
     return next();
 };
 
+//validation pour la mise a jour d'un service 
 const updateServiceValidation = async function(request, response, next) {
     const schema = joi.object({
         service_name: joi.string().messages({

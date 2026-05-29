@@ -13,9 +13,20 @@ const getTestimony = function(request, response){
     return response.send("recuperation des temoignages des clients satisfaits");
 };
 
+// authentification des utilisateurs 
+const login = function(resquest, response){
+    return response.send("authentification en cour ...");
+};
+
+const register = function(request, response){
+    return response.send("enregistrement en cour ...");
+};
 
 module.exports = {
     getServices,
     getProjects,
     getTestimony,
+
+    login,
+    register
 };

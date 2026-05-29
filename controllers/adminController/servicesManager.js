@@ -1,14 +1,33 @@
 const serviceModel = require("../../models/services");
+const {cloudinary} = require("../../config");
 
 // ------Ajout
 const addSerives = async function(request, response) {
     try {
-        const newService = new serviceModel({...request.body});
-        await newService.save();    
+        let file_path = "";
+
+        if (process.env.NODE_ENV == 'prod') {
+            // uploader le fichier sur cloudinary si on est en production 
+            
+            const result = await cloudinary.uploader.upload(request.file.path, {
+                folder: "clan-digital/services"
+            });
+            file_path = result.public_id;
+
+        } else {
+            // upload le fichier en local 
+            file_path = request.file.path;
+        }
+
+        const newService = new serviceModel({...request.body, service_image: file_path});
+        await newService.save();
+        console.log("Service cree avec success !");
+            
         response.json({
             message: "service ajouté avec success",
             service: newService
         });
+
     
     } catch (error) {
         console.log("erreur lors de l'ajout d'un service ", error);
